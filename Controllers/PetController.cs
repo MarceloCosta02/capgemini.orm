@@ -10,22 +10,22 @@ namespace apiorm.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ClientController : ControllerBase
+    public class PetController : ControllerBase
     {
         private readonly IPetShopRepository _repo;
 
-        public ClientController(IPetShopRepository repo)
+        public PetController(IPetShopRepository repo)
         {
             _repo = repo;
         }
 
-        // GET: api/Client
+        // GET: api/Pet
         [HttpGet]
         public async Task<IActionResult> Get()
         {
             try
             {
-                var clients = await _repo.GetAllClients();
+                var clients = await _repo.GetAllPets();
 
                 return Ok(clients);
             }
@@ -36,9 +36,9 @@ namespace apiorm.Controllers
         }
 
 
-        // POST: api/Client
+        // POST: api/Pet
         [HttpPost]
-        public async Task<IActionResult> Post(Client model)
+        public async Task<IActionResult> Post(Pet model)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace apiorm.Controllers
 
                 if (await _repo.SaveChangeAsync())
                 {
-                    return Ok("Cliente criado com sucesso!");
+                    return Ok("Pet criado com sucesso!");
                 }
 
             }
