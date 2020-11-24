@@ -9,6 +9,6 @@ namespace apiorm.Models
     {
         public int ClientId { get; set; }
         public string Name { get; set; }
-        public Pet Pet { get; set; }
+        public List<PetShopClient> PetShopClients { get; set; }
     }
 }

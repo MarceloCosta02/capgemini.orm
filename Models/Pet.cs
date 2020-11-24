@@ -9,7 +9,7 @@ namespace apiorm.Models
     {
         public int PetId { get; set; }
         public string Name { get; set; }
-        public int ClientId { get; set; }
-        public Client Client { get; set; }
+        public int PetshopId { get; set; }
+        public PetShop PetShop { get; set; }
     }
 }

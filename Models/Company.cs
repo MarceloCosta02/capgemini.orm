@@ -10,5 +10,7 @@ namespace apiorm.Models
         public int CompanyId { get; set; }
         public string CompanyCane { get; set; }
         public string CNPJ { get; set; }
+        public int PetshopId { get; set; }
+        public PetShop PetShop { get; set; }
     }
 }
