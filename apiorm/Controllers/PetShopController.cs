@@ -38,7 +38,7 @@ namespace apiorm.Controllers
 
         // GET: api/PetShop/get-by-id?id=1
         [HttpGet("{get-by-id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById([FromQuery] int id)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace apiorm.Controllers
 
         // GET: api/PetShop/get-by-id?id=1
         [HttpGet("{get-by-name}")]
-        public async Task<IActionResult> GetByName(string name)
+        public async Task<IActionResult> GetByName([FromQuery] string name)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace apiorm.Controllers
 
         // POST: api/PetShop
         [HttpPost]
-        public async Task<IActionResult> Post(PetShop model)
+        public async Task<IActionResult> Post([FromBody] PetShop model)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace apiorm.Controllers
 
         // PUT: api/PetShop
         [HttpPut]
-        public async Task<IActionResult> Put(int id, PetShop model)
+        public async Task<IActionResult> Put([FromBody] PetShop model, int id)
         {
             try
             {
@@ -130,7 +130,11 @@ namespace apiorm.Controllers
             {
                 var petShop = await _repo.GetPetShopById(id);
 
-                if (petShop != null)
+                if (petShop == null)
+                {
+                    return NotFound();
+                }
+                else
                 {
                     _repo.Delete(petShop);
 
@@ -138,8 +142,7 @@ namespace apiorm.Controllers
                     {
                         return NoContent();
                     }
-                }
-
+                }      
             }
             catch (Exception ex)
             {
