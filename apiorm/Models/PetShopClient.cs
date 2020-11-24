@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 
 namespace apiorm.Models
 {
-    public class Pet
+    public class PetShopClient
     {
-        public int PetId { get; set; }
-        public string Name { get; set; }
+        // Aplica nessa classe o relacionamento n pra n para as 2
+        public int PetshopId { get; set; }
+        public PetShop PetShop { get; set; }
+
         public int ClientId { get; set; }
         public Client Client { get; set; }
+               
     }
 }

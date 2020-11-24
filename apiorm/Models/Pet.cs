@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 
 namespace apiorm.Models
 {
-    public class Client
+    public class Pet
     {
-        public int ClientId { get; set; }
+        public int PetId { get; set; }
         public string Name { get; set; }
-        public Pet Pet { get; set; }
+        public int PetshopId { get; set; }
+        public PetShop PetShop { get; set; }
     }
 }
