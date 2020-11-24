@@ -33,29 +33,6 @@ namespace apiorm.Controllers
             {
                 return BadRequest($"Erro: {ex}");
             }
-        }
-
-
-        // POST: api/Company
-        [HttpPost]
-        public async Task<IActionResult> Post(Company model)
-        {
-            try
-            {
-                _repo.Add(model);
-
-                if (await _repo.SaveChangeAsync())
-                {
-                    return Ok("Compania criada com sucesso!");
-                }
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Erro: {ex}");
-            }
-
-            return BadRequest("Não Salvou");
-        }      
+        }         
     }
 }

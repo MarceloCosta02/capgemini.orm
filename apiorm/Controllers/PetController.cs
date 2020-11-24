@@ -33,29 +33,6 @@ namespace apiorm.Controllers
             {
                 return BadRequest($"Erro: {ex}");
             }
-        }
-
-
-        // POST: api/Pet
-        [HttpPost]
-        public async Task<IActionResult> Post(Pet model)
-        {
-            try
-            {
-                _repo.Add(model);
-
-                if (await _repo.SaveChangeAsync())
-                {
-                    return Ok("Pet criado com sucesso!");
-                }
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Erro: {ex}");
-            }
-
-            return BadRequest("Não Salvou");
-        }      
+        }        
     }
 }
