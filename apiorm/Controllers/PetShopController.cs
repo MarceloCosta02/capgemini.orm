@@ -37,8 +37,8 @@ namespace apiorm.Controllers
         }
 
         // GET: api/PetShop/get-by-id?id=1
-        [HttpGet("{get-by-id}")]
-        public async Task<IActionResult> GetById([FromQuery] int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
             try
             {
@@ -52,9 +52,9 @@ namespace apiorm.Controllers
             }
         }
 
-        // GET: api/PetShop/get-by-id?id=1
-        [HttpGet("{get-by-name}")]
-        public async Task<IActionResult> GetByName([FromQuery] string name)
+        // GET: api/PetShop/name/Pluto
+        [HttpGet("name/{name}")]
+        public async Task<IActionResult> GetByName(string name)
         {
             try
             {
@@ -91,7 +91,7 @@ namespace apiorm.Controllers
         }
 
         // PUT: api/PetShop
-        [HttpPut]
+        [HttpPut("update/{id}")]
         public async Task<IActionResult> Put([FromBody] PetShop model, int id)
         {
             try
