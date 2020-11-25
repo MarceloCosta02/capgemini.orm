@@ -9,32 +9,7 @@ using System.Threading.Tasks;
 namespace apiorm.Controllers
 {
     public class BaseController : ControllerBase
-    {
-        protected IActionResult VerifyResult(Func<IActionResult> servico)
-        {
-            try
-            {
-                return servico();
-            }
-
-            catch (InvalidOperationException inv)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, inv.Message);
-            }
-            catch (DataNotFoundException ex)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, ex.Message);
-            }
-            catch (ModelFieldIsNullException ex)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
-
+    {       
         protected async Task<IActionResult> VerifyResultAsync(Func<Task<IActionResult>> servico)
         {
             try

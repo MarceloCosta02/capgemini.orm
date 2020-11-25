@@ -34,7 +34,7 @@ namespace apiorm.Business.Implementations
         public async Task<PetShop> GetPetShopById(int id)
         {
             var result = await _petShop.GetPetShopById(id);
-            if (result.Equals(null))
+            if (result == null)
                 throw new DataNotFoundException($"Não foi encontrado um PetShop com o ID: {id}.");
             else
                 return result;
@@ -56,7 +56,7 @@ namespace apiorm.Business.Implementations
 
         public async Task<PetShop> CreatePetShop(PetShop model)
         {
-            PetShoptIsNotNull(model);
+            PetShoptIsNotNull(model, "CREATE");
 
             _repo.Add(model);
 
@@ -69,7 +69,7 @@ namespace apiorm.Business.Implementations
 
         public async Task<PetShop> UpdatePetShop(PetShop model, int id)
         {
-            PetShoptIsNotNull(model);
+            PetShoptIsNotNull(model, "UPDATE");
 
             var petShop = await _petShop.GetPetShopById(id);
 
@@ -86,7 +86,7 @@ namespace apiorm.Business.Implementations
             }
         }
 
-        public async void DeletePetShop(int id)
+        public async Task<PetShop> DeletePetShop(int id)
         {
             var petShop = await _petShop.GetPetShopById(id);
 
@@ -98,25 +98,32 @@ namespace apiorm.Business.Implementations
 
                 if (!await _repo.SaveChangeAsync())
                     throw new InvalidOperationException();
+                else
+                    return petShop;
             }
         }
 
         /// <summary> 
         /// Verifica se os campos do PetShop não são nulos
         /// </summary>
-        public void PetShoptIsNotNull(PetShop petShop)
+        public void PetShoptIsNotNull(PetShop petShop, string method)
         {
-            if (petShop.PetShopId.Equals(0))
-                throw new ModelFieldIsNullException("O ID do PetShop não pode ser 0");
-            else if (string.IsNullOrEmpty(petShop.Name))
-                throw new ModelFieldIsNullException("O nome do Cliente está vazio");
-            else if (string.IsNullOrEmpty(petShop.Company.CompanyCane))
-                throw new ModelFieldIsNullException("O nome da Compania está vazio");
-            else if (string.IsNullOrEmpty(petShop.Company.CNPJ))
-                throw new ModelFieldIsNullException("O CNPJ da Compania está vazio");
-            else if (!petShop.Pets.Any())
-                throw new ModelFieldIsNullException("Deve ser informado ao menos um Pet");
-        }
-      
+            if(method == "UPDATE")
+            {
+                if (petShop.PetShopId.Equals(0))
+                    throw new ModelFieldIsNullException("O ID do PetShop não pode ser 0");
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(petShop.Name))
+                    throw new ModelFieldIsNullException("O nome do PetShop está vazio");
+                else if (string.IsNullOrEmpty(petShop.Company.CompanyCane))
+                    throw new ModelFieldIsNullException("O nome da Compania está vazio");
+                else if (string.IsNullOrEmpty(petShop.Company.CNPJ))
+                    throw new ModelFieldIsNullException("O CNPJ da Compania está vazio");
+                else if (!petShop.Pets.Any())
+                    throw new ModelFieldIsNullException("Deve ser informado ao menos um Pet");
+            }           
+        }      
     }
 }

@@ -66,9 +66,9 @@ namespace apiorm.Controllers
 
         // DELETE: api/PetShop/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id) => VerifyResult(() =>
+        public Task<IActionResult> Delete(int id) => VerifyResultAsync(async () =>
         {
-            _petShop.DeletePetShop(id);
+            await _petShop.DeletePetShop(id);
             return NoContent();
         });
     }
