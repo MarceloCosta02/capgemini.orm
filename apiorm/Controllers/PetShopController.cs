@@ -32,7 +32,7 @@ namespace apiorm.Controllers
             return new ObjectResult(petShops) { StatusCode = StatusCodes.Status200OK };
         });
 
-        // GET: api/PetShop/get-by-id?id=1
+        // GET: api/PetShop/1
         [HttpGet("{id}")]
         public Task<IActionResult> GetById(int id) => VerifyResultAsync(async () =>
         {
