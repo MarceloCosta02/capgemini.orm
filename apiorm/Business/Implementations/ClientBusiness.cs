@@ -3,7 +3,6 @@ using apiorm.Exceptions;
 using apiorm.Models;
 using apiorm.Repository.Context;
 using apiorm.Repository.Interfaces;
-using apiorm.Validation;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
