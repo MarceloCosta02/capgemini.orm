@@ -13,6 +13,6 @@ namespace apiorm.Business.Interfaces
         Task<PetShop[]> GetPetShopByName(string name);
         Task<PetShop> CreatePetShop(PetShop model);
         Task<PetShop> UpdatePetShop(PetShop model, int id);
-        void DeletePetShop(int id);
+        Task<PetShop> DeletePetShop(int id);
     }
 }
