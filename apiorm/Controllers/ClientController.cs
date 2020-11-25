@@ -1,5 +1,7 @@
-﻿using apiorm.Models;
+﻿using apiorm.Business.Interfaces;
+using apiorm.Models;
 using apiorm.Repository.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,54 +12,32 @@ namespace apiorm.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ClientController : ControllerBase
+    public class ClientController : BaseController
     {
         private readonly IRepositoryEF _repo;
-        private readonly IClientRepository _client;
+        private readonly IClientBusiness _client;
 
-        public ClientController(IRepositoryEF repo, IClientRepository client)
+        public ClientController(IRepositoryEF repo, IClientBusiness client)
         {
             _repo = repo;
             _client = client;
         }
 
-        // GET: api/Client
+        // GET: api/client
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public Task<IActionResult> Get() => VerifyResultAsync(async () =>
         {
-            try
-            {
-                var clients = await _client.GetAllClients();
-
-                return Ok(clients);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Erro: {ex}");
-            }
-        }
+            var clients = await _client.GetAllClients();
+            return new ObjectResult(clients) { StatusCode = StatusCodes.Status200OK };
+        });
 
 
         // POST: api/Client
         [HttpPost]
-        public async Task<IActionResult> Post(Client model)
-        {
-            try
-            {
-                _repo.Add(model);
-
-                if (await _repo.SaveChangeAsync())
-                {
-                    return Ok("Cliente criado com sucesso!");
-                }
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Erro: {ex}");
-            }
-
-            return BadRequest("Não Salvou");
-        }      
+        public Task<IActionResult> Post(Client model) => VerifyResultAsync(async () =>
+        {      
+            await _client.CreateClient(model);
+            return new ObjectResult("Cliente criado com sucesso!") { StatusCode = StatusCodes.Status201Created };
+        });  
     }
 }
