@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using apiorm.Business.Implementations;
+using apiorm.Business.Interfaces;
 using apiorm.Models;
 using apiorm.Repository.Context;
 using apiorm.Repository.Implementations;
@@ -38,11 +40,18 @@ namespace apiorm
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            // Injeção de dependência dos Repository's
             services.AddScoped<IRepositoryEF, RepositoryEF>();
             services.AddScoped<IPetShopRepository, PetShopRepository>();
             services.AddScoped<IPetRepository, PetRepository>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<IClientRepository, ClientRepository>();
+
+            // Injeção de dependência dos Business
+            services.AddScoped<IPetBusiness, PetBusiness>();
+            services.AddScoped<IPetShopBusiness, PetShopBusiness>();
+            services.AddScoped<ICompanyBusiness, CompanyBusiness>();
+            services.AddScoped<IClientBusiness, ClientBusiness>();
 
             services.AddControllers().AddNewtonsoftJson(o =>
             {
