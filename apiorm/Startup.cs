@@ -38,7 +38,11 @@ namespace apiorm
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddScoped<IRepositoryEF, RepositoryEF>();
             services.AddScoped<IPetShopRepository, PetShopRepository>();
+            services.AddScoped<IPetRepository, PetRepository>();
+            services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<IClientRepository, ClientRepository>();
 
             services.AddControllers().AddNewtonsoftJson(o =>
             {
