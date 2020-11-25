@@ -12,11 +12,11 @@ namespace apiorm.Controllers
     [Route("api/[controller]")]
     public class PetController : ControllerBase
     {
-        private readonly IPetShopRepository _repo;
+        private readonly IPetRepository _pet;
 
-        public PetController(IPetShopRepository repo)
+        public PetController(IPetRepository pet)
         {
-            _repo = repo;
+            _pet = pet;
         }
 
         // GET: api/Pet
@@ -25,7 +25,7 @@ namespace apiorm.Controllers
         {
             try
             {
-                var clients = await _repo.GetAllPets();
+                var clients = await _pet.GetAllPets();
 
                 return Ok(clients);
             }

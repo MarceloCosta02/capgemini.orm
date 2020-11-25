@@ -13,9 +13,9 @@ namespace apiorm.Controllers
     [Route("api/[controller]")]
     public class PetShopController : ControllerBase
     {
-        private readonly IPetShopRepository _repo;
+        private readonly IRepositoryEF _repo;
 
-        public PetShopController(IPetShopRepository repo)
+        public PetShopController(IRepositoryEF repo)
         {
             _repo = repo;
         }
