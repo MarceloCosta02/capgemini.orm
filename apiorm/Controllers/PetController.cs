@@ -1,5 +1,7 @@
-﻿using apiorm.Models;
+﻿using apiorm.Business.Interfaces;
+using apiorm.Models;
 using apiorm.Repository.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,52 +12,21 @@ namespace apiorm.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class PetController : ControllerBase
+    public class PetController : BaseController
     {
-        private readonly IPetShopRepository _repo;
+        private readonly IPetBusiness _pet;
 
-        public PetController(IPetShopRepository repo)
+        public PetController(IPetBusiness pet)
         {
-            _repo = repo;
+            _pet = pet;
         }
 
-        // GET: api/Pet
+        // GET: api/pet
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public Task<IActionResult> Get() => VerifyResultAsync(async () =>
         {
-            try
-            {
-                var clients = await _repo.GetAllPets();
-
-                return Ok(clients);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Erro: {ex}");
-            }
-        }
-
-
-        // POST: api/Pet
-        [HttpPost]
-        public async Task<IActionResult> Post(Pet model)
-        {
-            try
-            {
-                _repo.Add(model);
-
-                if (await _repo.SaveChangeAsync())
-                {
-                    return Ok("Pet criado com sucesso!");
-                }
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Erro: {ex}");
-            }
-
-            return BadRequest("Não Salvou");
-        }      
+             var pets = await _pet.GetAllPets();
+             return new ObjectResult(pets) { StatusCode = StatusCodes.Status200OK };
+        });
     }
 }

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using apiorm.Business.Interfaces;
 using apiorm.Models;
 using apiorm.Repository.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -11,145 +13,63 @@ namespace apiorm.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class PetShopController : ControllerBase
+    public class PetShopController : BaseController
     {
-        private readonly IPetShopRepository _repo;
+        private readonly IRepositoryEF _repo;
+        private readonly IPetShopBusiness _petShop;
 
-        public PetShopController(IPetShopRepository repo)
+        public PetShopController(IRepositoryEF repo, IPetShopBusiness petShop)
         {
+            _petShop = petShop;
             _repo = repo;
         }
 
         // GET: api/PetShop
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public Task<IActionResult> Get() => VerifyResultAsync(async () =>
         {
-            try
-            {
-                var petShops = await _repo.GetAllPetShops();
-
-                return Ok(petShops);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Erro: {ex}");
-            }
-        }
+            var petShops = await _petShop.GetAllPetShops();
+            return new ObjectResult(petShops) { StatusCode = StatusCodes.Status200OK };
+        });
 
         // GET: api/PetShop/get-by-id?id=1
-        [HttpGet("{get-by-id}")]
-        public async Task<IActionResult> GetById([FromQuery] int id)
+        [HttpGet("{id}")]
+        public Task<IActionResult> GetById(int id) => VerifyResultAsync(async () =>
         {
-            try
-            {
-                var petShops = await _repo.GetPetShopById(id);
+            var petShops = await _petShop.GetPetShopById(id);
+            return new ObjectResult(petShops) { StatusCode = StatusCodes.Status200OK };
+        });
 
-                return Ok(petShops);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Erro: {ex}");
-            }
-        }
-
-        // GET: api/PetShop/get-by-id?id=1
-        [HttpGet("{get-by-name}")]
-        public async Task<IActionResult> GetByName([FromQuery] string name)
+        // GET: api/PetShop/name/Pluto
+        [HttpGet("name/{name}")]
+        public Task<IActionResult> GetByName(string name) => VerifyResultAsync(async () =>
         {
-            try
-            {
-                var petShops = await _repo.GetPetShopByName(name);
-
-                return Ok(petShops);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Erro: {ex}");
-            }
-        }
+            var petShops = await _petShop.GetPetShopByName(name);
+            return new ObjectResult(petShops) { StatusCode = StatusCodes.Status200OK };
+        });
 
         // POST: api/PetShop
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] PetShop model)
+        public Task<IActionResult> Post([FromBody] PetShop model) => VerifyResultAsync(async () =>
         {
-            try
-            {
-                _repo.Add(model);
+            await _petShop.CreatePetShop(model);
+            return new ObjectResult("PetShop criado com sucesso!") { StatusCode = StatusCodes.Status201Created };
+        });
 
-                if (await _repo.SaveChangeAsync())
-                {
-                    return Ok("PetShop criado com sucesso!");
-                }
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Erro: {ex}");
-            }
-
-            return BadRequest("Não Salvou");
-        }
-
-        // PUT: api/PetShop
-        [HttpPut]
-        public async Task<IActionResult> Put([FromBody] PetShop model, int id)
+        // PUT: api/PetShop/update/5
+        [HttpPut("update/{id}")]
+        public Task<IActionResult> Put([FromBody] PetShop model, int id) => VerifyResultAsync(async () =>
         {
-            try
-            {
-                var petShop = await _repo.GetPetShopById(id);
-
-                if(petShop == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    _repo.Update(model);
-
-                    if(await _repo.SaveChangeAsync())
-                    {
-                        return Ok("PetShop atualizado com sucesso");
-                    }
-
-                }          
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Erro: {ex}");
-            }
-
-            return BadRequest($"Não salvou");
-        }
+            var petShop = await _petShop.UpdatePetShop(model, id);
+            return new ObjectResult(petShop) { StatusCode = StatusCodes.Status200OK };
+        });       
 
         // DELETE: api/PetShop/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public IActionResult Delete(int id) => VerifyResult(() =>
         {
-            try
-            {
-                var petShop = await _repo.GetPetShopById(id);
-
-                if (petShop == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    _repo.Delete(petShop);
-
-                    if (await _repo.SaveChangeAsync())
-                    {
-                        return NoContent();
-                    }
-                }      
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Erro: {ex}");
-            }
-
-            return BadRequest("Não Salvou");
-        }
+            _petShop.DeletePetShop(id);
+            return NoContent();
+        });
     }
 }
